@@ -1,6 +1,6 @@
 import { validate, ValidationError } from "class-validator";
 import { describe, expect, it } from "vitest";
-import { TestIsDefined } from "./common.js";
+import { TestIsDefined, TestIsOptional } from "./common.js";
 
 describe("IsDefined", () => {
   it("value should not be deleted", async () => {
@@ -65,6 +65,71 @@ describe("IsDefined", () => {
   });
   it("value can be empty object", async () => {
     const t = new TestIsDefined();
+    t.value = {};
+    expect(await validate(t)).toStrictEqual([]);
+  });
+});
+
+describe("IsOptional", () => {
+  it("value can be deleted", async () => {
+    const t = new TestIsOptional();
+    delete t.value;
+    expect(t).not.toHaveProperty("value");
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be undefined", async () => {
+    const t = new TestIsOptional();
+    expect(t).toHaveProperty("value");
+    expect(t.value).toBeUndefined();
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be null", async () => {
+    const t = new TestIsOptional();
+    t.value = null;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be false", async () => {
+    const t = new TestIsOptional();
+    t.value = false;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be NaN", async () => {
+    const t = new TestIsOptional();
+    t.value = NaN;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be 0", async () => {
+    const t = new TestIsOptional();
+    t.value = 0;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be -0", async () => {
+    const t = new TestIsOptional();
+    t.value = -0;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be 0n", async () => {
+    const t = new TestIsOptional();
+    t.value = 0n;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be empty string", async () => {
+    const t = new TestIsOptional();
+    t.value = "";
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be true", async () => {
+    const t = new TestIsOptional();
+    t.value = true;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be empty array", async () => {
+    const t = new TestIsOptional();
+    t.value = [];
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be empty object", async () => {
+    const t = new TestIsOptional();
     t.value = {};
     expect(await validate(t)).toStrictEqual([]);
   });
