@@ -1,4 +1,11 @@
-import { IsIn, IsNotIn, validate, ValidationError } from "class-validator";
+import {
+  Equals,
+  IsIn,
+  IsNotIn,
+  NotEquals,
+  validate,
+  ValidationError,
+} from "class-validator";
 import { describe, expect, it } from "vitest";
 import {
   TestEquals,
@@ -168,6 +175,15 @@ describe("Equals", () => {
     t.value = 0n;
     expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
   });
+  it("NaN", async () => {
+    class Test {
+      @Equals(NaN)
+      value: unknown;
+    }
+    const t = new Test();
+    t.value = NaN;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
 });
 
 describe("NotEquals", () => {
@@ -194,6 +210,15 @@ describe("NotEquals", () => {
   it("value can be 0n", async () => {
     const t = new TestNotEquals();
     t.value = 0n;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("NaN", async () => {
+    class Test {
+      @NotEquals(NaN)
+      value: unknown;
+    }
+    const t = new Test();
+    t.value = NaN;
     expect(await validate(t)).toStrictEqual([]);
   });
 });
