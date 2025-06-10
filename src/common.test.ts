@@ -1,6 +1,6 @@
 import { validate, ValidationError } from "class-validator";
 import { describe, expect, it } from "vitest";
-import { TestIsDefined, TestIsOptional } from "./common.js";
+import { TestEquals, TestIsDefined, TestIsOptional } from "./common.js";
 
 describe("IsDefined", () => {
   it("value should not be deleted", async () => {
@@ -132,5 +132,28 @@ describe("IsOptional", () => {
     const t = new TestIsOptional();
     t.value = {};
     expect(await validate(t)).toStrictEqual([]);
+  });
+});
+
+describe("Equals", () => {
+  it("value can be 0", async () => {
+    const t = new TestEquals();
+    t.value = 0;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be -0", async () => {
+    const t = new TestEquals();
+    t.value = -0;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value should not be 1", async () => {
+    const t = new TestEquals();
+    t.value = 1;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it('value should not be "0"', async () => {
+    const t = new TestEquals();
+    t.value = "0";
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
   });
 });
