@@ -161,6 +161,11 @@ describe("Equals", () => {
     t.value = "0";
     expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
   });
+  it("value should not be 0n", async () => {
+    const t = new TestEquals();
+    t.value = 0n;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
 });
 
 describe("NotEquals", () => {
