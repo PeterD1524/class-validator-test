@@ -1,4 +1,10 @@
-import { Equals, IsDefined, IsOptional, NotEquals } from "class-validator";
+import {
+  Equals,
+  IsDefined,
+  IsEmpty,
+  IsOptional,
+  NotEquals,
+} from "class-validator";
 
 export class TestIsDefined {
   @IsDefined()
@@ -17,5 +23,10 @@ export class TestEquals {
 
 export class TestNotEquals {
   @NotEquals(0)
+  value: unknown;
+}
+
+export class TestIsEmpty {
+  @IsEmpty()
   value: unknown;
 }

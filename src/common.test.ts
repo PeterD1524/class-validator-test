@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   TestEquals,
   TestIsDefined,
+  TestIsEmpty,
   TestIsOptional,
   TestNotEquals,
 } from "./common.js";
@@ -193,5 +194,40 @@ describe("NotEquals", () => {
     const t = new TestNotEquals();
     t.value = 0n;
     expect(await validate(t)).toStrictEqual([]);
+  });
+});
+
+describe("IsEmpty", () => {
+  it("value can be deleted", async () => {
+    const t = new TestIsEmpty();
+    delete t.value;
+    expect(t).not.toHaveProperty("value");
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be undefined", async () => {
+    const t = new TestIsEmpty();
+    expect(t).toHaveProperty("value");
+    expect(t.value).toBeUndefined();
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be null", async () => {
+    const t = new TestIsEmpty();
+    t.value = null;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be empty string", async () => {
+    const t = new TestIsEmpty();
+    t.value = "";
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value should not be empty array", async () => {
+    const t = new TestIsEmpty();
+    t.value = [];
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("value should not be empty object", async () => {
+    const t = new TestIsEmpty();
+    t.value = {};
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
   });
 });
