@@ -1,4 +1,4 @@
-import { validate, ValidationError } from "class-validator";
+import { IsIn, validate, ValidationError } from "class-validator";
 import { describe, expect, it } from "vitest";
 import {
   TestEquals,
@@ -265,5 +265,70 @@ describe("IsNotEmpty", () => {
     const t = new TestIsNotEmpty();
     t.value = {};
     expect(await validate(t)).toStrictEqual([]);
+  });
+});
+
+describe("IsIn", () => {
+  it("0", async () => {
+    class Test {
+      @IsIn([0])
+      value: unknown;
+    }
+    const t = new Test();
+    expect(t).toHaveProperty("value");
+    expect(t.value).toBeUndefined();
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+    t.value = 0;
+    expect(await validate(t)).toStrictEqual([]);
+    t.value = -0;
+    expect(await validate(t)).toStrictEqual([]);
+    t.value = 1;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+    t.value = "0";
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+    t.value = 0n;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("{}", async () => {
+    class Test {
+      @IsIn([{}])
+      value: unknown;
+    }
+    const t = new Test();
+    t.value = {};
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("undefined", async () => {
+    class Test {
+      @IsIn([undefined])
+      value: unknown;
+    }
+    const t = new Test();
+    expect(t).toHaveProperty("value");
+    expect(t.value).toBeUndefined();
+    expect(await validate(t)).toStrictEqual([]);
+    delete t.value;
+    expect(t).not.toHaveProperty("value");
+    expect(await validate(t)).toStrictEqual([]);
+    t.value = null;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("sparse array", async () => {
+    class Test {
+      // eslint-disable-next-line no-sparse-arrays
+      @IsIn([,])
+      value: unknown;
+    }
+    const t = new Test();
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("NaN", async () => {
+    class Test {
+      @IsIn([NaN])
+      value: unknown;
+    }
+    const t = new Test();
+    t.value = NaN;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
   });
 });
