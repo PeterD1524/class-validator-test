@@ -1,4 +1,4 @@
-import { IsIn, validate, ValidationError } from "class-validator";
+import { IsIn, IsNotIn, validate, ValidationError } from "class-validator";
 import { describe, expect, it } from "vitest";
 import {
   TestEquals,
@@ -330,5 +330,44 @@ describe("IsIn", () => {
     const t = new Test();
     t.value = NaN;
     expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+});
+
+describe("IsNotIn", () => {
+  it("0", async () => {
+    class Test {
+      @IsNotIn([0])
+      value: unknown;
+    }
+    const t = new Test();
+    expect(t).toHaveProperty("value");
+    expect(t.value).toBeUndefined();
+    expect(await validate(t)).toStrictEqual([]);
+    t.value = 0;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+    t.value = -0;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+    t.value = 1;
+    expect(await validate(t)).toStrictEqual([]);
+    t.value = "0";
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("sparse array", async () => {
+    class Test {
+      // eslint-disable-next-line no-sparse-arrays
+      @IsNotIn([,])
+      value: unknown;
+    }
+    const t = new Test();
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("NaN", async () => {
+    class Test {
+      @IsNotIn([NaN])
+      value: unknown;
+    }
+    const t = new Test();
+    t.value = NaN;
+    expect(await validate(t)).toStrictEqual([]);
   });
 });
