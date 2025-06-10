@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": false,
+    "target": "esnext",
+    "types": ["@types/node"],
+    "outDir": "dist",
+    "composite": true,
+    "lib": [],
+    "module": "nodenext",
+    "verbatimModuleSyntax": true,
+    "noUncheckedSideEffectImports": true,
+    "noEmit": true
+  },
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "files": ["eslint.config.ts"]
+}

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": false,
+    "target": "esnext",
+    "types": ["@types/node"],
+    "outDir": "dist",
+    "composite": true,
+    "lib": ["ESNext"],
+    "module": "nodenext",
+    "experimentalDecorators": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "include": ["src/**/*.ts"]
+}
