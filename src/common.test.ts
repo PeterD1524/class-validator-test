@@ -1,6 +1,11 @@
 import { validate, ValidationError } from "class-validator";
 import { describe, expect, it } from "vitest";
-import { TestEquals, TestIsDefined, TestIsOptional } from "./common.js";
+import {
+  TestEquals,
+  TestIsDefined,
+  TestIsOptional,
+  TestNotEquals,
+} from "./common.js";
 
 describe("IsDefined", () => {
   it("value should not be deleted", async () => {
@@ -155,5 +160,33 @@ describe("Equals", () => {
     const t = new TestEquals();
     t.value = "0";
     expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+});
+
+describe("NotEquals", () => {
+  it("value should not be 0", async () => {
+    const t = new TestNotEquals();
+    t.value = 0;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("value should not be -0", async () => {
+    const t = new TestNotEquals();
+    t.value = -0;
+    expect(await validate(t)).toStrictEqual([expect.any(ValidationError)]);
+  });
+  it("value can be 1", async () => {
+    const t = new TestNotEquals();
+    t.value = 1;
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it('value can be "0"', async () => {
+    const t = new TestNotEquals();
+    t.value = "0";
+    expect(await validate(t)).toStrictEqual([]);
+  });
+  it("value can be 0n", async () => {
+    const t = new TestNotEquals();
+    t.value = 0n;
+    expect(await validate(t)).toStrictEqual([]);
   });
 });
