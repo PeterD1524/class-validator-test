@@ -2,6 +2,7 @@ import {
   Equals,
   IsDefined,
   IsEmpty,
+  IsNotEmpty,
   IsOptional,
   NotEquals,
 } from "class-validator";
@@ -28,5 +29,10 @@ export class TestNotEquals {
 
 export class TestIsEmpty {
   @IsEmpty()
+  value: unknown;
+}
+
+export class TestIsNotEmpty {
+  @IsNotEmpty()
   value: unknown;
 }
